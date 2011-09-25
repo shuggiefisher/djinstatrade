@@ -17,5 +17,8 @@ pip install -r djinstatrade/requirements.txt
 cd djinstatrade
 nano -w sitespecific_settings.py
 
+# make sure the log file exists:
+# eg: touch ../tmp/djinstatrade.log
+
 # start the webserver
 ./manage.py runserver 8080
