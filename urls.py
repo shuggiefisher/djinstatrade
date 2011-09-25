@@ -6,6 +6,8 @@ admin.autodiscover()
 urlpatterns = patterns('',
     url(r'^$', 'stocks.views.home', name='home'),
     url(r'^stock/(?P<stock_name>\w+)/envelope.csv', 'stocks.views.envelope', name='envelope'),
+    url(r'^stock/(?P<stock_name>\w+)/chatter.csv', 'stocks.views.chatter', name='chatter'),
+    url(r'^stock/(?P<stock_name>\w+)/positive_fraction.csv', 'stocks.views.positive_fraction', name='positive_fraction'),
     url(r'^stock/(?P<stock_name>\w+)', 'stocks.views.stock', name='stock'),
     url(r'^logout$', 'views.logout_user', name='logout'),
     url(r'', include('social_auth.urls')),

@@ -7,21 +7,60 @@
 {% block main_content %}
     <div class="span10">
         <h1><a href="{% url stock stock.name %}">{{ stock.name }}</a></h1>
-        <h2>Daily values</h2>
-        <div id="graphdiv" style="width:500px; height:320px;"></div>
+        
+        <div id="envelope_graph" style="width:550px; height:320px;"></div>
         <script type="text/javascript">
             g = new Dygraph(
           
                 // containing div
-                document.getElementById("graphdiv"),
+                document.getElementById("envelope_graph"),
             
                 // CSV or path to a CSV file.
                 '{{ stock.name }}/envelope.csv',
                 
                 {
-                customBars: true
-                //title: 'Daily Temperatures in New York vs. San Francisco',
-                //ylabel: 'Stock Value',
+                customBars: true,
+                title: 'Stock Price of {{ stock.name }} and positive and negative sentiment across social media',
+                ylabel: 'Stock Price',
+                colors: ['rgb(0,255,0)']
+                }
+            
+            );
+        </script>
+        
+        <div id="chatter_graph" style="width:550px; height:320px;"></div>
+        <script type="text/javascript">
+            h = new Dygraph(
+          
+                // containing div
+                document.getElementById("chatter_graph"),
+            
+                // CSV or path to a CSV file.
+                '{{ stock.name }}/chatter.csv',
+                
+                {
+                title: 'Total volume of positive and negative sentiment across social media',
+                ylabel: 'Updates/Tweets/Mentions',
+                colors: ['rgb(0,0,255)']
+                }
+            
+            );
+        </script>
+        
+        <div id="positive_sentiment_graph" style="width:550px; height:320px;"></div>
+        <script type="text/javascript">
+            i = new Dygraph(
+          
+                // containing div
+                document.getElementById("positive_sentiment_graph"),
+            
+                // CSV or path to a CSV file.
+                '{{ stock.name }}/positive_fraction.csv',
+                
+                {
+                title: 'Fraction social media of social media sentiment that is positive',
+                ylabel: 'Positive sentiment fraction',
+                colors: ['rgb(255,0,0)']
                 }
             
             );

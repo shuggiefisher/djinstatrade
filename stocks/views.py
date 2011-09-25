@@ -52,9 +52,7 @@ def stock(request, stock_name):
 def unix_datetime_to_date(unix_datetime):
     return datetime.datetime.fromtimestamp(unix_datetime).strftime('%Y-%m-%d')
     
-def envelope(request, stock_name):
-    
-    stock, values, sentiment = get_values_and_sentiment(stock_name)
+def get_daily_values(values, sentiment):
     
     day_values = []
     values_list = []
@@ -93,6 +91,14 @@ def envelope(request, stock_name):
                 day_value['negative_envelope'] = day_value['value']-envelope_size*value_range*(day_value['negative']/chatter_max)
                 break
     
+    return day_values
+    
+def envelope(request, stock_name):
+    
+    stock, values, sentiment = get_values_and_sentiment(stock_name)
+    
+    day_values = get_daily_values(values, sentiment)
+    
     response = HttpResponse(mimetype='text/csv')
     response['Content-Disposition'] = 'attachment; filename=envelope.csv'
     
@@ -104,4 +110,36 @@ def envelope(request, stock_name):
                         ])
     return response
     
+def chatter(request, stock_name):
+    
+    stock, values, sentiment = get_values_and_sentiment(stock_name)
+    
+    day_values = get_daily_values(values, sentiment)
+    
+    response = HttpResponse(mimetype='text/csv')
+    response['Content-Disposition'] = 'attachment; filename=chatter.csv'
+    
+    writer = csv.writer(response)
+    writer.writerow(['date','social media chatter'])
+    for day_value in day_values:
+        writer.writerow([day_value['date'],
+                        day_value['positive']+day_value['negative'],
+                        ])
+    return response
 
+def positive_fraction(request, stock_name):
+    
+    stock, values, sentiment = get_values_and_sentiment(stock_name)
+    
+    day_values = get_daily_values(values, sentiment)
+    
+    response = HttpResponse(mimetype='text/csv')
+    response['Content-Disposition'] = 'attachment; filename=positive_fraction.csv'
+    
+    writer = csv.writer(response)
+    writer.writerow(['date','positive social media chatter'])
+    for day_value in day_values:
+        writer.writerow([day_value['date'],
+                        day_value['positive_fraction'],
+                        ])
+    return response
