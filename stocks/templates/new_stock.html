@@ -1,0 +1,31 @@
+{% extends "bootstrap.html" %}
+
+{% block extra_js %}
+    <script src="{{ STATIC_URL }}js/dygraph-combined.js"></script>    
+{% endblock %}
+    
+{% block main_content %}
+    <div class="span10">
+        <h1><a href="{% url stock stock.name %}">{{ stock.name }}</a></h1>
+        <h2>Daily values</h2>
+        <div id="graphdiv" style="width:500px; height:320px;"></div>
+        <script type="text/javascript">
+            g = new Dygraph(
+          
+                // containing div
+                document.getElementById("graphdiv"),
+            
+                // CSV or path to a CSV file.
+                '{{ stock.name }}/envelope.csv',
+                
+                {
+                customBars: true
+                //title: 'Daily Temperatures in New York vs. San Francisco',
+                //ylabel: 'Stock Value',
+                }
+            
+            );
+        </script>
+    </div>
+
+{% endblock %}

@@ -44,7 +44,7 @@ def stock(request, stock_name):
             'values': values,
             'sentiment': sentiment
         })
-    return render_to_response('stock.html', context_dict)
+    return render_to_response('new_stock.html', context_dict)
 
 #sentiment = ['time', 'positive', 'negative', 'neutral']
 #values = ['time', 'value']
@@ -57,33 +57,50 @@ def envelope(request, stock_name):
     stock, values, sentiment = get_values_and_sentiment(stock_name)
     
     day_values = []
+    values_list = []
     for day in values['daily']:
         # create list of dictionary of Date : Stock Value pairs
         day_values.append(dict(time = day[0],
-                               value = day[1],
+                               value = float(day[1]),
                                date = unix_datetime_to_date(day[0])
                                ))
+        # save the stock values to a list so we can get the max and min later
+        values_list.append(float(day[1]))
+    
+    max_value = max(values_list)
+    min_value = min(values_list)
+    
+    value_range = max_value - min_value
+    envelope_size = 0.4
+    
+    chatter_list = []
+    for day in sentiment['daily']:
+        chatter_list.append(int(day[1])+int(day[2]))
+    
+    chatter_max = max(chatter_list)
+    chatter_range = chatter_max - min(chatter_list)
     
     # I don't know for sure if values and sentiment lists are in the same date order,
     # so I will have to manually find the matches
     for day in sentiment['daily']:
         for day_value in day_values:
             if day_value['time'] == day[0]:
-                day_value['positive'] = day[1]
-                day_value['negative'] = day[2]
+                day_value['positive'] = float(day[1])
+                day_value['negative'] = float(day[2])
+                day_value['positive_fraction'] = day_value['positive']/(day_value['positive']+day_value['negative'])
+                day_value['negative_fraction'] = 1-day_value['positive_fraction']
+                day_value['positive_envelope'] = day_value['value']+value_range*envelope_size*(day_value['positive']/chatter_max)
+                day_value['negative_envelope'] = day_value['value']-envelope_size*value_range*(day_value['negative']/chatter_max)
                 break
     
     response = HttpResponse(mimetype='text/csv')
     response['Content-Disposition'] = 'attachment; filename=envelope.csv'
     
     writer = csv.writer(response)
-    writer.writerow(['date','unix_datetime','stock_value','positive','negative'])
+    writer.writerow(['date','stock_value'])
     for day_value in day_values:
         writer.writerow([day_value['date'],
-                        day_value['time'],
-                        day_value['value'],
-                        day_value['positive'],
-                        day_value['negative']
+                        str(day_value['negative_envelope']) + ';' + str(day_value['value']) + ';' + str(day_value['positive_envelope']),
                         ])
     return response
     
