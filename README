@@ -1,0 +1,18 @@
+To recreate an replicatable environment for django-instatrade:
+
+mkdir django-instatrade
+cd django-instatrade
+virtualenv --no-site-packages --distribute .
+
+# clone the repository
+git clone https://github.com/shuggiefisher/djinstatrade.git
+
+# activate the environment to ensure you use the environment's python binaries, and the system python binaries
+source bin/activate
+
+# install the tornado requirements into the environment
+pip install -r djinstatrade/requirements.txt
+
+# start the webserver
+cd djinstatrade
+./manage.py runserver 8080

@@ -1,0 +1,15 @@
+{% extends "bootstrap.html" %}
+
+{% block main_content %}
+    <div class="span10">
+        {% for stock in stocks %}
+            <h2>
+                <a href="{% url stock stock.name %}">{{ stock.name }}</a>
+            </h2>
+            <h3>Keywords</h3>
+            {% for keyword in stock.keywords %}
+            {{ keyword }},
+            {% endfor %}
+        {% endfor %}
+    </div>
+{% endblock %}
