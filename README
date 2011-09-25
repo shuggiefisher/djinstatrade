@@ -10,9 +10,12 @@ git clone https://github.com/shuggiefisher/djinstatrade.git
 # activate the environment to ensure you use the environment's python binaries, and the system python binaries
 source bin/activate
 
-# install the tornado requirements into the environment
+# install the django requirements into the environment
 pip install -r djinstatrade/requirements.txt
 
-# start the webserver
+# fix the site specific settings
 cd djinstatrade
+nano -w sitespecific_settings.py
+
+# start the webserver
 ./manage.py runserver 8080

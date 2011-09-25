@@ -1,5 +1,7 @@
 # Django settings for djinstatrade project.
 
+import sitespecific_settings
+
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
@@ -70,9 +72,7 @@ STATIC_URL = '/static/'
 ADMIN_MEDIA_PREFIX = '/static/admin/'
 
 # Additional locations of static files
-STATICFILES_DIRS = (
- '/Users/rob/Sites/tornado/djinstatrade/media/static/',
-)
+STATICFILES_DIRS = sitespecific_settings.STATICFILES_DIRS
 
 # List of finder classes that know how to find static files in
 # various locations.
@@ -158,7 +158,7 @@ SOCIAL_AUTH_ERROR_KEY = 'social_errors'
 SOCIAL_AUTH_DEFAULT_USERNAME = 'new_social_auth_user'
 
 
-LOG_FILE = '/Users/rob/Sites/tornado/tmp/instatrade.log'
+LOG_FILE = sitespecific_settings.LOG_FILE
 
 import logging
 logging.getLogger().setLevel(logging.DEBUG)
