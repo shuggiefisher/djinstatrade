@@ -20,3 +20,9 @@ img#dropdown_profile_image {
     border: none;
     cursor: pointer;
 }
+
+span#fb_like_button {
+    margin-top: 9px;
+    display: inline-block;
+    margin-left: 10px;
+}
