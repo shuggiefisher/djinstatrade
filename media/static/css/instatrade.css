@@ -26,3 +26,11 @@ span#fb_like_button {
     display: inline-block;
     margin-left: 10px;
 }
+
+.stock_listing {
+    margin-bottom: 30px;
+}
+
+.stock_graph {
+    margin-bottom: 80px;
+}
